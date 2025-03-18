@@ -633,8 +633,8 @@
             <div class="reviewer">
                 <div class="reviewer-image"></div>
                 <div class="reviewer-info">
-                    <span class="reviewer-name">Emma Thompson</span>
-                    <span class="reviewer-details">emmathompson88@gmail.com • 3 days ago</span>
+                    <span class="reviewer-name">EmmaTheBest4Ev3r!</span>
+                    <span class="reviewer-details">emmabest4life@sgnation.com • 3 days ago</span>
                 </div>
             </div>
             <p class="review-text">SleepTrack is decent but has room for improvement. The sleep tracking is generally accurate and I like the smart alarm feature that wakes you during light sleep. However, the interface is cluttered and some of the best features are locked behind a premium subscription. Battery drain is also an issue when running overnight.</p>
@@ -649,18 +649,18 @@
             <div class="app-info">
                 <div class="app-icon"></div>
                 <div>
-                    <div class="app-name">QuickChat</div>
+                    <div class="app-name">AskRandos</div>
                     <div class="app-category">Social</div>
                 </div>
             </div>
             <div class="reviewer">
                 <div class="reviewer-image"></div>
                 <div class="reviewer-info">
-                    <span class="reviewer-name">Tyler Johnson</span>
-                    <span class="reviewer-details">tj_socialbfly@gmail.com • 4 days ago</span>
+                    <span class="reviewer-name">WMax3298</span>
+                    <span class="reviewer-details">Maxthegoat@ginb.com • 4 days ago</span>
                 </div>
             </div>
-            <p class="review-text">QuickChat is terrible! Constant crashes, messages not sending, and notifications that don't work. The latest update completely broke the app for me and many others based on their community forum. They also recently implemented intrusive ads that take up half the screen. Uninstalling today.</p>
+            <p class="review-text">AskRandos is terrible! Constant crashes, messages not sending, and notifications that don't work. The latest update completely broke the app for me and many others based on their community forum. They also recently implemented intrusive ads that take up half the screen. Uninstalling today.</p>
             <div class="review-meta">
                 <span>Version 6.2.3</span>
                 <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
@@ -813,3 +813,209 @@
             // Pagination functionality (simple demo)
             const paginationLinks = document.querySelectorAll('.pagination a');
             pagination
+
+            document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const cards = document.querySelectorAll('.review-card');
+    const filterButtons = document.querySelectorAll('.filter-button');
+    
+    // Extract all unique categories from the reviews
+    const categories = new Set();
+    cards.forEach(card => {
+        const category = card.querySelector('.app-category').innerText;
+        categories.add(category);
+    });
+    
+    // Create category filter container if it doesn't exist
+    let categoryFilterContainer = document.querySelector('.category-filter-container');
+    if (!categoryFilterContainer) {
+        categoryFilterContainer = document.createElement('div');
+        categoryFilterContainer.className = 'filter-container category-filter-container';
+        
+        // Add heading for category filters
+        const heading = document.createElement('h3');
+        heading.textContent = 'Filter by Category:';
+        heading.style.margin = '0 10px 0 0';
+        categoryFilterContainer.appendChild(heading);
+        
+        // Create "All Categories" button
+        const allCategoriesButton = document.createElement('button');
+        allCategoriesButton.className = 'filter-button category-button active';
+        allCategoriesButton.dataset.category = 'all';
+        allCategoriesButton.textContent = 'All Categories';
+        categoryFilterContainer.appendChild(allCategoriesButton);
+        
+        // Create buttons for each category
+        Array.from(categories).sort().forEach(category => {
+            const button = document.createElement('button');
+            button.className = 'filter-button category-button';
+            button.dataset.category = category;
+            button.textContent = category;
+            categoryFilterContainer.appendChild(button);
+        });
+        
+        // Insert category filter container after the existing filter container
+        const existingFilterContainer = document.querySelector('.filter-container');
+        existingFilterContainer.parentNode.insertBefore(categoryFilterContainer, existingFilterContainer.nextSibling);
+    }
+    
+    // Function to filter reviews by category
+    function filterByCategory(category) {
+        cards.forEach(card => {
+            const cardCategory = card.querySelector('.app-category').innerText;
+            
+            if (category === 'all' || cardCategory === category) {
+                // Show this card (if it's not hidden by another filter)
+                if (!card.classList.contains('rating-hidden')) {
+                    card.classList.remove('hidden');
+                }
+            } else {
+                // Hide this card
+                card.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Update the existing filter function to use a different class
+    function filterByRating(rating) {
+        // Remove highlighting from previous searches
+        cards.forEach(card => {
+            const textElement = card.querySelector('.review-text');
+            textElement.innerHTML = textElement.innerText;
+            
+            // Reset rating-hidden class
+            card.classList.remove('rating-hidden');
+        });
+        
+        if (rating === 'all') {
+            cards.forEach(card => {
+                card.classList.remove('rating-hidden');
+                
+                // Check if card should be visible based on category filter
+                const activeCategory = document.querySelector('.category-button.active').dataset.category;
+                if (activeCategory === 'all' || card.querySelector('.app-category').innerText === activeCategory) {
+                    card.classList.remove('hidden');
+                }
+            });
+        } else {
+            cards.forEach(card => {
+                if (card.dataset.rating === rating) {
+                    card.classList.remove('rating-hidden');
+                    
+                    // Check if card should be visible based on category filter
+                    const activeCategory = document.querySelector('.category-button.active').dataset.category;
+                    if (activeCategory === 'all' || card.querySelector('.app-category').innerText === activeCategory) {
+                        card.classList.remove('hidden');
+                    }
+                } else {
+                    card.classList.add('rating-hidden');
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    }
+    
+    // Attach event listeners for category filters
+    document.querySelectorAll('.category-button').forEach(button => {
+        button.addEventListener('click', function() {
+            // Update active button
+            document.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Apply category filter
+            filterByCategory(this.dataset.category);
+        });
+    });
+    
+    // Update the existing event listeners for star rating filters
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Clear search input
+            searchInput.value = '';
+            
+            // Apply filter
+            filterByRating(this.dataset.filter);
+        });
+    });
+    
+    // Update search functionality to respect both filters
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        // Reset all cards to remove highlights
+        cards.forEach(card => {
+            const textElement = card.querySelector('.review-text');
+            textElement.innerHTML = textElement.innerText;
+        });
+        
+        if (searchTerm === '') {
+            // If search is empty, show all cards based on current filters
+            const activeRating = document.querySelector('.filter-button.active').dataset.filter;
+            const activeCategory = document.querySelector('.category-button.active').dataset.category;
+            
+            cards.forEach(card => {
+                // Check if card matches both rating and category filters
+                const cardCategory = card.querySelector('.app-category').innerText;
+                const ratingMatch = activeRating === 'all' || card.dataset.rating === activeRating;
+                const categoryMatch = activeCategory === 'all' || cardCategory === activeCategory;
+                
+                if (ratingMatch && categoryMatch) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            return;
+        }
+        
+        // Loop through all cards to find matching content
+        cards.forEach(card => {
+            const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
+            const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
+            const appName = card.querySelector('.app-name').innerText.toLowerCase();
+            const appCategory = card.querySelector('.app-category').innerText.toLowerCase();
+            
+            const textMatch = reviewText.includes(searchTerm) || 
+                              reviewerName.includes(searchTerm) || 
+                              appName.includes(searchTerm) || 
+                              appCategory.includes(searchTerm);
+            
+            // Check if card matches current filters
+            const activeRating = document.querySelector('.filter-button.active').dataset.filter;
+            const activeCategory = document.querySelector('.category-button.active').dataset.category;
+            
+            const ratingMatch = activeRating === 'all' || card.dataset.rating === activeRating;
+            const categoryMatch = activeCategory === 'all' || appCategory === activeCategory.toLowerCase();
+            
+            if (textMatch && ratingMatch && categoryMatch) {
+                // Show this card
+                card.classList.remove('hidden');
+                
+                // Highlight the matching text
+                const textElement = card.querySelector('.review-text');
+                const originalText = textElement.innerText;
+                const highlightedText = originalText.replace(
+                    new RegExp(searchTerm, 'gi'),
+                    match => `<span class="highlighted">${match}</span>`
+                );
+                textElement.innerHTML = highlightedText;
+            } else {
+                // Hide this card
+                card.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Attach event listeners for search
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+});
