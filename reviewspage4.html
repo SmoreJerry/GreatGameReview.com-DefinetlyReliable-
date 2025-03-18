@@ -1,1 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheGameInsight - All Reviews</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f2e7;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #f9f2e7;
+            border-bottom: 1px solid #e6e0d4;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #999;
+            font-weight: normal;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+        nav a.active {
+            font-weight: bold;
+            color: #5a6554;
+        }
+        
+        .login-button {
+            display: flex;
+            align-items: center;
+            background-color: #e6e0d4;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .search-container {
+            background-color: #f9f2e7;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .search-wrapper {
+            display: flex;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        #searchInput {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        
+        #searchButton {
+            padding: 10px 20px;
+            background-color: #5a6554;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        #searchButton:hover {
+            background-color: #4a5544;
+        }
+        
+        .highlighted {
+            background-color: #ffffa0;
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .page-title {
+            text-align: center;
+            padding: 30px 0;
+            font-size: 32px;
+            color: #333;
+        }
+        
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .filter-button {
+            padding: 8px 15px;
+            background-color: #e6e0d4;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .filter-button.active {
+            background-color: #5a6554;
+            color: white;
+        }
+        
+        .filter-button:hover {
+            background-color: #d6d0c4;
+        }
+        
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .review-card {
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stars {
+            color: gold;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .reviewer {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .reviewer-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            object-position: center;
+            background-color: #e6e0d4;
+        }
+        
+        .reviewer-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .reviewer-name {
+            font-weight: bold;
+        }
+        
+        .reviewer-details {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .app-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .app-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 8px;
+            background-color: #e6e0d4;
+        }
+        
+        .app-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .app-category {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .review-text {
+            flex-grow: 1;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .platform-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #5a6554;
+            color: white;
+            border-color: #5a6554;
+        }
+        
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #5a6554;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chat-icon {
+            margin-right: 5px;
+        }
+        
+        footer {
+            background-color: #5a6554;
+            color: white;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            margin: 0 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-section ul li a {
+            color: #f0f0f0;
+            text-decoration: none;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+            
+            .footer-section {
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>TheGame<span>Insight</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="reviews.html" class="active">Reviews</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="#">Top Apps</a></li>
+                <li><a href="contact.html">Feedback</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="login-button">
+            <span>Log In</span>
+        </a>
+    </header>
+    
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search reviews by app, user, or keywords...">
+            <button id="searchButton">Search</button>
+        </div>
+    </div>
+    
+    <h1 class="page-title">All App Reviews</h1>
+    
+    <div class="reviews-container">
+        <!-- TaskManager App -->
+        <div class="review-card" data-rating="4">
+            <div class="stars">★ ★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">TaskManager</div>
+                    <div class="app-category">Productivity</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">Khine Koh</span>
+                    <span class="reviewer-details">KhineKohobjectshowsaremyfav@gooly.com • 2 days ago</span>
+                </div>
+            </div>
+            <p class="review-text">TaskManager is fantastic! It syncs across all my devices seamlessly. The UI is clean and intuitive, and the reminder system is reliable. Tho it sometimes crashes while using it. But still one of the better task managers I've used in a few years!</p>
+            <div class="review-meta">
+                <span>Version 4.2.1</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <!-- CapEdits App -->
+        <div class="review-card" data-rating="5">
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">CapEdits</div>
+                    <div class="app-category">Photography</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">XTPhotos</span>
+                    <span class="reviewer-details">XiaoThangTehCertifiedPhotographer@gmail.com • 1 year ago</span>
+                </div>
+            </div>
+            <p class="review-text">Love CapEdits app! Multiple filters available and professional editing tools. The subscription is worth every penny for the quality of features you get. Highly recommended!</p>
+            <div class="review-meta">
+                <span>Version 2.8.3</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <!-- FitRoute App -->
+        <div class="review-card" data-rating="2">
+            <div class="stars">★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">FitRoute</div>
+                    <div class="app-category">Fitness</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">Ryan Ong</span>
+                    <span class="reviewer-details">ryanongsportsman@bawoo.com • 3 weeks ago</span>
+                </div>
+            </div>
+            <p class="review-text">FitRoute stinks! It does not even connect to my watch, tracks lesser steps than what I actually walk and the reward system is either really difficult to get the rewards or it is a SCAM! Definitely do not recommend you getting it.</p>
+            <div class="review-meta">
+                <span>Version 5.1.0</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <!-- SpotOn App -->
+        <div class="review-card" data-rating="3">
+            <div class="stars">★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">SpotOn</div>
+                    <div class="app-category">Music</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">AbiStar</span>
+                    <span class="reviewer-details">yourlocalmusiclover_abi@mepple.com • 2 months ago</span>
+                </div>
+            </div>
+            <p class="review-text">SpotOn is good overall but needs improvement in their recommendations algorithm. I like the audio quality and selection of music, but often end up with suggestions that don't match my taste.</p>
+            <div class="review-meta">
+                <span>Version 7.4.2</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <!-- Reviewy App -->
+        <div class="review-card" data-rating="3">
+            <div class="stars">★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">Reviewy</div>
+                    <div class="app-category">Food & Dining</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">SmoreBunnies</span>
+                    <span class="reviewer-details">smbunniesdagoat@yellyourpassionout.com • 2 days ago</span>
+                </div>
+            </div>
+            <p class="review-text">Reviewy, Your Number One Restaurant Reviewer app is an ok app it seems, but the UI is all over the place and the app is laggy from time to time.</p>
+            <div class="review-meta">
+                <span>Version 3.1.5</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <!-- Adventuring App -->
+        <div class="review-card" data-rating="1">
+            <div class="stars">★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">Adventuring</div>
+                    <div class="app-category">Games</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">Bavid Dazucki</span>
+                    <span class="reviewer-details">BavidDazuckiOfficial@gmail.com • 10 hours ago</span>
+                </div>
+            </div>
+            <p class="review-text">In all of my time playing games, I have never, NEVER seen a worser game than Adventuring. This game sucks! There's nothing good to write about this. Its gameplay just sucks, it's pay2win, there's nothing good about this. Would rate it zero stars if I could.</p>
+            <div class="review-meta">
+                <span>Version 2.0.1</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <!-- Additional Reviews -->
+        <div class="review-card" data-rating="4">
+            <div class="stars">★ ★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">BrainFocus</div>
+                    <div class="app-category">Productivity</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">Ling Wu</span>
+                    <span class="reviewer-details">lingwu_notetaker@fastmail.com • 5 days ago</span>
+                </div>
+            </div>
+            <p class="review-text">BrainFocus has transformed my workday! The Pomodoro timer with customizable work/break intervals fits perfectly with my workflow. Love the ambient noise feature and minimal distractions. The only downside is occasional syncing issues between mobile and desktop versions.</p>
+            <div class="review-meta">
+                <span>Version 2.3.0</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <div class="review-card" data-rating="5">
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">MealPrep</div>
+                    <div class="app-category">Food & Dining</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">Marcus Chen</span>
+                    <span class="reviewer-details">fitchef_marcus@gmail.com • 2 weeks ago</span>
+                </div>
+            </div>
+            <p class="review-text">MealPrep is absolutely fantastic! The recipe database is extensive and the auto-generated shopping lists save so much time. I love how it calculates nutrition for each meal and suggests alternatives based on dietary preferences. Best meal planning app I've ever used!</p>
+            <div class="review-meta">
+                <span>Version 4.5.2</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <div class="review-card" data-rating="2">
+            <div class="stars">★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">QuickDraw</div>
+                    <div class="app-category">Art & Design</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">Sophia Rodriguez</span>
+                    <span class="reviewer-details">sophrodart@yahoo.com • 1 month ago</span>
+                </div>
+            </div>
+            <p class="review-text">QuickDraw has potential but the execution is disappointing. The brush tools are limited and there's noticeable lag on larger canvases. The export options are also very basic. I've tried contacting support twice about crashes but never received a response. Sticking with my old art app.</p>
+            <div class="review-meta">
+                <span>Version 1.4.3</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <div class="review-card" data-rating="5">
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">PocketTutor</div>
+                    <div class="app-category">Education</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">James Wilson</span>
+                    <span class="reviewer-details">jwilson_student@outlook.com • 1 week ago</span>
+                </div>
+            </div>
+            <p class="review-text">PocketTutor is a game-changer for my studies! The step-by-step problem solving in math and physics helped me raise my grades significantly. The practice quizzes adapt to my weak areas, and the explanations are clear and concise. Worth every penny of the subscription!</p>
+            <div class="review-meta">
+                <span>Version 5.0.1</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <div class="review-card" data-rating="3">
+            <div class="stars">★ ★ ★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">SleepTrack</div>
+                    <div class="app-category">Health & Fitness</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">EmmaTheBest4Ev3r!</span>
+                    <span class="reviewer-details">emmabest4life@sgnation.com • 3 days ago</span>
+                </div>
+            </div>
+            <p class="review-text">SleepTrack is decent but has room for improvement. The sleep tracking is generally accurate and I like the smart alarm feature that wakes you during light sleep. However, the interface is cluttered and some of the best features are locked behind a premium subscription. Battery drain is also an issue when running overnight.</p>
+            <div class="review-meta">
+                <span>Version 3.8.7</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+        
+        <div class="review-card" data-rating="1">
+            <div class="stars">★</div>
+            <div class="app-info">
+                <div class="app-icon"></div>
+                <div>
+                    <div class="app-name">AskRandos</div>
+                    <div class="app-category">Social</div>
+                </div>
+            </div>
+            <div class="reviewer">
+                <div class="reviewer-image"></div>
+                <div class="reviewer-info">
+                    <span class="reviewer-name">WMax3298</span>
+                    <span class="reviewer-details">Maxthegoat@ginb.com • 4 days ago</span>
+                </div>
+            </div>
+            <p class="review-text">AskRandos is terrible! Constant crashes, messages not sending, and notifications that don't work. The latest update completely broke the app for me and many others based on their community forum. They also recently implemented intrusive ads that take up half the screen. Uninstalling today.</p>
+            <div class="review-meta">
+                <span>Version 6.2.3</span>
+                <img src="/api/placeholder/20/20" alt="Platform" class="platform-icon">
+            </div>
+        </div>
+    </div>
+    
+    <div class="pagination">
+        <a href="reviews.html">1</a>
+        <a href="reviewspage2.html">2</a>
+        <a href="reviewspage3.html">3</a>
+        <a href="#" class="active">4</a>
+        <a href="reviewspage5.html">5</a>
+        <a href="reviewspage3.html">Previous</a>
+        <a href="reviewspage5.html">Next</a>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TheGameInsight</h3>
+                <p>Your trusted source for app reviews, news, and recommendations since 2023.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="#">Top Apps</a></li>
+                    <li><a href="contact.html">Feedback</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#">Productivity</a></li>
+                    <li><a href="#">Photography</a></li>
+                    <li><a href="#">Fitness</a></li>
+                    <li><a href="#">Music</a></li>
+                    <li><a href="#">Food & Dining</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 TheGameInsight. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <a href="contact.html" class="chat-button">
+        <span class="chat-icon">💬</span>
+        <span>Give Us Feedback!</span>
+    </a>
 
+    <script>
+                document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const reviewCards = document.querySelectorAll('.review-card');
+    
+    // Function to perform search
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        if (searchTerm === '') {
+            // If search is empty, show all cards
+            reviewCards.forEach(card => {
+                card.classList.remove('hidden');
+                // Reset any highlighted text
+                const textElement = card.querySelector('.review-text');
+                textElement.innerHTML = textElement.innerText;
+            });
+            return;
+        }
+        
+        // Loop through all cards to find matching content
+        reviewCards.forEach(card => {
+            const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
+            const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
+            const appName = card.querySelector('.app-name').innerText.toLowerCase();
+            
+            if (reviewText.includes(searchTerm) || 
+                reviewerName.includes(searchTerm) || 
+                appName.includes(searchTerm)) {
+                // Show this card
+                card.classList.remove('hidden');
+                
+                // Highlight the matching text in review
+                const textElement = card.querySelector('.review-text');
+                const originalText = textElement.innerText;
+                const highlightedText = originalText.replace(
+                    new RegExp(searchTerm, 'gi'),
+                    match => `<span class="highlighted">${match}</span>`
+                );
+                textElement.innerHTML = highlightedText;
+            } else {
+                // Hide this card
+                card.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Attach event listeners for search
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+});
