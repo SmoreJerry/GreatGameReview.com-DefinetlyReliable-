@@ -719,101 +719,57 @@
 
     <script>
                 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const searchButton = document.getElementById('searchButton');
-    const reviewCards = document.querySelectorAll('.review-card');
-    const filterButtons = document.querySelectorAll('.filter-button');
-    
-    // Function to filter reviews by star rating
-    function filterReviewsByRating(rating) {
-        // Remove highlighting from previous searches
-        reviewCards.forEach(card => {
-            const textElement = card.querySelector('.review-text');
-            textElement.innerHTML = textElement.innerText;
-        });
-        
-        if (rating === 'all') {
-            // Show all cards if 'all' is selected
-            reviewCards.forEach(card => {
-                card.classList.remove('hidden');
-            });
-        } else {
-            // Show only cards with matching rating
-            reviewCards.forEach(card => {
-                if (card.dataset.rating === rating) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const cards = document.querySelectorAll('.testimonial-card');
+            
+            // Function to perform search
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    // If search is empty, show all cards
+                    cards.forEach(card => {
+                        card.classList.remove('hidden');
+                        
+                        // Remove any existing highlighting
+                        const text = card.querySelector('.review-text');
+                        text.innerHTML = text.innerText;
+                    });
+                    return;
+                }
+                
+                // Loop through all cards to find matching content
+                cards.forEach(card => {
+                    const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
+                    const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
+                    
+                    if (reviewText.includes(searchTerm) || reviewerName.includes(searchTerm)) {
+                        // Show this card
+                        card.classList.remove('hidden');
+                        
+                        // Highlight the matching text
+                        const textElement = card.querySelector('.review-text');
+                        const originalText = textElement.innerText;
+                        const highlightedText = originalText.replace(
+                            new RegExp(searchTerm, 'gi'),
+                            match => `<span class="highlighted">${match}</span>`
+                        );
+                        textElement.innerHTML = highlightedText;
+                    } else {
+                        // Hide this card
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Attach event listeners
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
                 }
             });
-        }
-    }
-    
-    // Function to perform search
-    function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        
-        if (searchTerm === '') {
-            // If search is empty, show all cards based on current filter
-            const activeFilter = document.querySelector('.filter-button.active').dataset.filter;
-            filterReviewsByRating(activeFilter);
-            return;
-        }
-        
-        // Loop through all cards to find matching content
-        reviewCards.forEach(card => {
-            const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
-            const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
-            const appName = card.querySelector('.app-name').innerText.toLowerCase();
-            const appCategory = card.querySelector('.app-category').innerText.toLowerCase();
-            
-            if (reviewText.includes(searchTerm) || 
-                reviewerName.includes(searchTerm) || 
-                appName.includes(searchTerm) || 
-                appCategory.includes(searchTerm)) {
-                // Show this card
-                card.classList.remove('hidden');
-                
-                // Highlight the matching text
-                const textElement = card.querySelector('.review-text');
-                const originalText = textElement.innerText;
-                const highlightedText = originalText.replace(
-                    new RegExp(searchTerm, 'gi'),
-                    match => `<span class="highlighted">${match}</span>`
-                );
-                textElement.innerHTML = highlightedText;
-            } else {
-                // Hide this card
-                card.classList.add('hidden');
-            }
-        });
-    }
-    
-    // Attach event listeners for star rating filters
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Update active button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Clear search input
-            searchInput.value = '';
-            
-            // Apply filter
-            filterReviewsByRating(this.dataset.filter);
-        });
-    });
-    
-    // Attach event listeners for search
-    searchButton.addEventListener('click', performSearch);
-    searchInput.addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-            performSearch();
-        }
-    });
-    
-    // Initialize with "All Reviews" filter active
-    filterReviewsByRating('all');
     
     // Pagination functionality (simple demo - can be expanded)
     const paginationLinks = document.querySelectorAll('.pagination a');
