@@ -578,3 +578,611 @@
     </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppInsight - App News</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f2e7;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #f9f2e7;
+            border-bottom: 1px solid #e6e0d4;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #999;
+            font-weight: normal;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+        nav a.active {
+            font-weight: bold;
+            color: #5a6554;
+        }
+        
+        .login-button {
+            display: flex;
+            align-items: center;
+            background-color: #e6e0d4;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .search-container {
+            background-color: #f9f2e7;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .search-wrapper {
+            display: flex;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        #searchInput {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        
+        #searchButton {
+            padding: 10px 20px;
+            background-color: #5a6554;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        #searchButton:hover {
+            background-color: #4a5544;
+        }
+        
+        .highlighted {
+            background-color: #ffffa0;
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .news-section {
+            padding: 40px 20px;
+        }
+        
+        .news-section h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .news-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .news-article {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .news-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .news-content {
+            padding: 20px;
+        }
+        
+        .news-category {
+            display: inline-block;
+            background-color: #5a6554;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .news-title {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .news-excerpt {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .news-date {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .featured-news {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .featured-news .news-image {
+            width: 50%;
+            height: 100%;
+        }
+        
+        .featured-news .news-content {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .read-more {
+            display: inline-block;
+            margin-top: 15px;
+            color: #5a6554;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .pagination a {
+            display: inline-block;
+            padding: 8px 14px;
+            margin: 0 5px;
+            border-radius: 4px;
+            text-decoration: none;
+            background-color: white;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pagination a.active {
+            background-color: #5a6554;
+            color: white;
+        }
+        
+        .news-filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .filter-button {
+            background-color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-button.active {
+            background-color: #5a6554;
+            color: white;
+        }
+        
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #5a6554;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chat-icon {
+            margin-right: 5px;
+        }
+        
+        footer {
+            background-color: #5a6554;
+            color: white;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            margin: 0 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-section ul li a {
+            color: #f0f0f0;
+            text-decoration: none;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        @media (max-width: 992px) {
+            .featured-news {
+                grid-column: span 1;
+                flex-direction: column;
+            }
+            
+            .featured-news .news-image,
+            .featured-news .news-content {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .news-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+            
+            .footer-section {
+                margin-bottom: 30px;
+            }
+            
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>App<span>Insight</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="news.html" class="active">News</a></li>
+                <li><a href="#">Top Apps</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="login-button">
+            <span>Log In</span>
+        </a>
+    </header>
+    
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search news articles...">
+            <button id="searchButton">Search</button>
+        </div>
+    </div>
+    
+    <section class="news-section">
+        <h2>Latest App News & Updates</h2>
+        
+        <div class="news-filters">
+            <button class="filter-button active" data-category="all">All News</button>
+            <button class="filter-button" data-category="updates">App Updates</button>
+            <button class="filter-button" data-category="releases">New Releases</button>
+            <button class="filter-button" data-category="industry">Industry News</button>
+            <button class="filter-button" data-category="tips">Tips & Tricks</button>
+        </div>
+        
+        <div class="news-container">
+            <article class="news-article featured-news" data-category="releases">
+                <img src="https://picsum.photos/800/400" alt="Featured News" class="news-image">
+                <div class="news-content">
+                    <span class="news-category">New Release</span>
+                    <h3 class="news-title">TaskManager 3.0 Launches with AI-Powered Scheduling</h3>
+                    <p class="news-excerpt">The popular productivity app TaskManager has released a major update featuring artificial intelligence that learns your habits and optimizes your schedule accordingly. The update also includes a redesigned interface and cross-platform synchronization improvements.</p>
+                    <span class="news-date">March 15, 2025</span>
+                    <a href="#" class="read-more">Read Full Article →</a>
+                </div>
+            </article>
+            
+            <article class="news-article" data-category="updates">
+                <img src="https://picsum.photos/600/300" alt="App Update" class="news-image">
+                <div class="news-content">
+                    <span class="news-category">Update</span>
+                    <h3 class="news-title">CapEdits Adds New Professional Filter Pack</h3>
+                    <p class="news-excerpt">Professional photo editing app CapEdits has released a free update with 25 new filters designed for portrait photography.</p>
+                    <span class="news-date">March 14, 2025</span>
+                    <a href="#" class="read-more">Read Full Article →</a>
+                </div>
+            </article>
+            
+            <article class="news-article" data-category="industry">
+                <img src="https://picsum.photos/601/300" alt="Industry News" class="news-image">
+                <div class="news-content">
+                    <span class="news-category">Industry News</span>
+                    <h3 class="news-title">Study Shows App Usage Increased 27% in Last Quarter</h3>
+                    <p class="news-excerpt">A new research report indicates significant growth in mobile app usage across all categories, with productivity and health apps seeing the largest increases.</p>
+                    <span class="news-date">March 12, 2025</span>
+                    <a href="#" class="read-more">Read Full Article →</a>
+                </div>
+            </article>
+            
+            <article class="news-article" data-category="releases">
+                <img src="https://picsum.photos/602/300" alt="New App" class="news-image">
+                <div class="news-content">
+                    <span class="news-category">New Release</span>
+                    <h3 class="news-title">FitRoute 2 Promises Better Activity Tracking</h3>
+                    <p class="news-excerpt">The developers behind the controversial fitness app FitRoute have released a completely rebuilt version claiming to address previous concerns about step counting accuracy and connectivity issues.</p>
+                    <span class="news-date">March 10, 2025</span>
+                    <a href="#" class="read-more">Read Full Article →</a>
+                </div>
+            </article>
+            
+            <article class="news-article" data-category="tips">
+                <img src="https://picsum.photos/603/300" alt="Tips and Tricks" class="news-image">
+                <div class="news-content">
+                    <span class="news-category">Tips & Tricks</span>
+                    <h3 class="news-title">10 Hidden Features in SpotOn Music App</h3>
+                    <p class="news-excerpt">Discover lesser-known features that can enhance your music streaming experience and help you find new tracks that better match your taste.</p>
+                    <span class="news-date">March 8, 2025</span>
+                    <a href="#" class="read-more">Read Full Article →</a>
+                </div>
+            </article>
+            
+            <article class="news-article" data-category="updates">
+                <img src="https://picsum.photos/604/300" alt="App Update" class="news-image">
+                <div class="news-content">
+                    <span class="news-category">Update</span>
+                    <h3 class="news-title">Reviewy App Redesigns Interface After User Feedback</h3>
+                    <p class="news-excerpt">Restaurant review platform Reviewy has launched a major UI update aimed at addressing performance issues and simplifying the navigation experience.</p>
+                    <span class="news-date">March 5, 2025</span>
+                    <a href="#" class="read-more">Read Full Article →</a>
+                </div>
+            </article>
+        </div>
+        
+        <div class="pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">Next →</a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About AppInsight</h3>
+                <p>Your trusted source for app reviews, news, and recommendations since 2023.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Reviews</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Top Apps</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#">Productivity</a></li>
+                    <li><a href="#">Photography</a></li>
+                    <li><a href="#">Fitness</a></li>
+                    <li><a href="#">Music</a></li>
+                    <li><a href="#">Food & Dining</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 AppInsight. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <a href="#" class="chat-button">
+        <span class="chat-icon">💬</span>
+        <span>Chat With Us</span>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const newsArticles = document.querySelectorAll('.news-article');
+            
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    // If search is empty, show all articles
+                    newsArticles.forEach(article => {
+                        article.classList.remove('hidden');
+                        
+                        // Remove any existing highlighting
+                        const title = article.querySelector('.news-title');
+                        const excerpt = article.querySelector('.news-excerpt');
+                        
+                        title.innerHTML = title.innerText;
+                        excerpt.innerHTML = excerpt.innerText;
+                    });
+                    return;
+                }
+                
+                // Loop through all articles to find matching content
+                newsArticles.forEach(article => {
+                    const title = article.querySelector('.news-title').innerText.toLowerCase();
+                    const excerpt = article.querySelector('.news-excerpt').innerText.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || excerpt.includes(searchTerm)) {
+                        // Show this article
+                        article.classList.remove('hidden');
+                        
+                        // Highlight the matching text
+                        const titleElement = article.querySelector('.news-title');
+                        const excerptElement = article.querySelector('.news-excerpt');
+                        
+                        const highlightedTitle = titleElement.innerText.replace(
+                            new RegExp(searchTerm, 'gi'),
+                            match => `<span class="highlighted">${match}</span>`
+                        );
+                        
+                        const highlightedExcerpt = excerptElement.innerText.replace(
+                            new RegExp(searchTerm, 'gi'),
+                            match => `<span class="highlighted">${match}</span>`
+                        );
+                        
+                        titleElement.innerHTML = highlightedTitle;
+                        excerptElement.innerHTML = highlightedExcerpt;
+                    } else {
+                        // Hide this article
+                        article.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Attach event listeners
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Category filter functionality
+            const filterButtons = document.querySelectorAll('.filter-button');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Filter articles
+                    newsArticles.forEach(article => {
+                        if (category === 'all' || article.getAttribute('data-category') === category) {
+                            article.classList.remove('hidden');
+                        } else {
+                            article.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+            
+            // Pagination functionality (simplified - would connect to backend in real implementation)
+            const paginationLinks = document.querySelectorAll('.pagination a');
+            
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    paginationLinks.forEach(pLink => pLink.classList.remove('active'));
+                    
+                    // Add active class to clicked link unless it's "Next"
+                    if (!this.textContent.includes('Next')) {
+                        this.classList.add('active');
+                    }
+                    
+                    // Here you would normally load new content via AJAX
+                    // For demo purposes, we'll just scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
