@@ -718,44 +718,48 @@
     function performSearch() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     
-    if (searchTerm === '') {
-        // If search is empty, show all cards
-        reviewCards.forEach(card => {
-            card.classList.remove('hidden');
-            // Reset any highlighted text
-            const textElement = card.querySelector('.review-text');
-            textElement.innerHTML = textElement.innerText;
-        });
-        return;
-    }
-    
     // Loop through all cards to find matching content
     reviewCards.forEach(card => {
+        // Get all the text content we want to search in
         const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
         const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
         const appName = card.querySelector('.app-name').innerText.toLowerCase();
+        const allSearchableText = reviewText + " " + reviewerName + " " + appName;
         
-        if (reviewText.includes(searchTerm) || 
-            reviewerName.includes(searchTerm) || 
-            appName.includes(searchTerm)) {
+        // If search is empty or we find a match
+        if (searchTerm === '' || allSearchableText.includes(searchTerm)) {
             // Show this card
             card.classList.remove('hidden');
             
-            // Highlight the matching text in review
-            const textElement = card.querySelector('.review-text');
-            const originalText = textElement.innerText;
-            
-            // Escape special characters in searchTerm for safe regex use
-            const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            
-            // Create regex with the escaped search term
-            const regex = new RegExp(escapedSearchTerm, 'gi');
-            const highlightedText = originalText.replace(
-                regex,
-                match => `<span class="highlighted">${match}</span>`
-            );
-            
-            textElement.innerHTML = highlightedText;
+            // Only try to highlight if there's a search term
+            if (searchTerm !== '') {
+                // Reset the text first to remove any previous highlights
+                const textElement = card.querySelector('.review-text');
+                const originalText = textElement.innerText;
+                
+                // Create a simple string replacement instead of regex
+                let highlightedText = '';
+                const lowerOriginal = originalText.toLowerCase();
+                let lastIndex = 0;
+                
+                let startPos = lowerOriginal.indexOf(searchTerm);
+                while (startPos !== -1) {
+                    // Add text before the match
+                    highlightedText += originalText.substring(lastIndex, startPos);
+                    
+                    // Add the highlighted match (using the original case from the text)
+                    const matchedText = originalText.substring(startPos, startPos + searchTerm.length);
+                    highlightedText += `<span class="highlighted">${matchedText}</span>`;
+                    
+                    // Move past this match
+                    lastIndex = startPos + searchTerm.length;
+                    startPos = lowerOriginal.indexOf(searchTerm, lastIndex);
+                }
+                
+                // Add any remaining text
+                highlightedText += originalText.substring(lastIndex);
+                textElement.innerHTML = highlightedText;
+            }
         } else {
             // Hide this card
             card.classList.add('hidden');
