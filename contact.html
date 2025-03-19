@@ -1,9 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title >Contact</title>
+  <title >Feedback</title>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f2e7;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #f9f2e7;
+            border-bottom: 1px solid #e6e0d4;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #999;
+            font-weight: normal;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+        nav a.active {
+            font-weight: bold;
+            color: #5a6554;
+        }
+
+        footer {
+            background-color: #5a6554;
+            color: white;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            margin: 0 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-section ul li a {
+            color: #f0f0f0;
+            text-decoration: none;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .testimonials-container {
+                flex-direction: column;
+            }
+            
+            .info-container {
+                flex-direction: column;
+            }
+            
+            .address-container {
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+            
+            .footer-section {
+                margin-bottom: 30px;
+            }
+        }
+    </style>
 </head>
   <body>
+     <header>
+        <div class="logo">
+            <h1>TheApp<span>Insight</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="contact.html">Feedback</a></li>
+                <li><a href="addreviews.html">Add Reviews</a></li>
+                
+            </ul>
+        </nav>
+        </a>
+    </header>
     <form
   action="https://formspree.io/f/xeoaovar"
   method="POST"
@@ -19,5 +160,40 @@
  
   <button type="submit">Send</button>
 </form>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About ThAppInsight</h3>
+                <p>Your trusted source for app reviews, news, and recommendations since 2023.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="contact.html">Feedback</a></li>
+                    <li><a href="addreviews.html">Add Reviews</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#">Productivity</a></li>
+                    <li><a href="#">Photography</a></li>
+                    <li><a href="#">Fitness</a></li>
+                    <li><a href="#">Music</a></li>
+                    <li><a href="#">Food & Dining</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 TheGameInsight. All rights reserved.</p>
+        </div>
+    </footer>
+    </a>
   </body>
 </html>
