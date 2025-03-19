@@ -710,33 +710,105 @@
     </a>
 
     <script>
-               document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const searchButton = document.getElementById('searchButton');
-    const reviewCards = document.querySelectorAll('.review-card');
-    
-    // Simple search function
-    function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        
-        // Process each card
-        reviewCards.forEach(function(card) {
-            const text = card.textContent.toLowerCase();
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const cards = document.querySelectorAll('.testimonial-card');
             
-            // Simple contains check
-            if (searchTerm === '' || text.includes(searchTerm)) {
-                card.style.display = ''; // Show card
-            } else {
-                card.style.display = 'none'; // Hide card
+            // Function to perform search
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    // If search is empty, show all cards
+                    cards.forEach(card => {
+                        card.classList.remove('hidden');
+                        
+                        // Remove any existing highlighting
+                        const text = card.querySelector('.review-text');
+                        text.innerHTML = text.innerText;
+                    });
+                    return;
+                }
+                
+                // Loop through all cards to find matching content
+                cards.forEach(card => {
+                    const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
+                    const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
+                    
+                    if (reviewText.includes(searchTerm) || reviewerName.includes(searchTerm)) {
+                        // Show this card
+                        card.classList.remove('hidden');
+                        
+                        // Highlight the matching text
+                        const textElement = card.querySelector('.review-text');
+                        const originalText = textElement.innerText;
+                        const highlightedText = originalText.replace(
+                            new RegExp(searchTerm, 'gi'),
+                            match => `<span class="highlighted">${match}</span>`
+                        );
+                        textElement.innerHTML = highlightedText;
+                    } else {
+                        // Hide this card
+                        card.classList.add('hidden');
+                    }
+                });
             }
+            
+            // Attach event listeners
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        
+            // Simple carousel functionality
+            const prevButton = document.querySelector('.prev');
+            const nextButton = document.querySelector('.next');
+            
+            // For small screens, show only one card at a time
+            let currentIndex = 0;
+            
+            function updateCarousel() {
+                if (window.innerWidth <= 768) {
+                    cards.forEach((card, index) => {
+                        if (index === currentIndex) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                } else {
+                    // On larger screens, show all cards
+                    cards.forEach(card => {
+                        card.style.display = 'flex';
+                    });
+                }
+            }
+            
+            prevButton.addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                } else {
+                    currentIndex = cards.length - 1;
+                }
+                updateCarousel();
+            });
+            
+            nextButton.addEventListener('click', function() {
+                if (currentIndex < cards.length - 1) {
+                    currentIndex++;
+                } else {
+                    currentIndex = 0;
+                }
+                updateCarousel();
+            });
+            
+            // Initial update and resize listener
+            updateCarousel();
+            window.addEventListener('resize', updateCarousel);
         });
-    }
-    
-    // Add event listeners
-    searchButton.addEventListener('click', performSearch);
-    searchInput.addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-            performSearch();
-        }
-    });
-});
+    </script>
+</body>
+</html>
