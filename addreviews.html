@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real-Time Reviews</title>
+  <title>Add Reviews</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -121,10 +121,48 @@
     .status-indicator.visible {
       opacity: 1;
     }
+
+    nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+        nav a.active {
+            font-weight: bold;
+            color: #5a6554;
+        }
   </style>
 </head>
 <body>
-  <h1>Real-Time Reviews</h1>
+   <header>
+        <div class="logo">
+            <h1>TheApp<span>Insight</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="contact.html">Feedback</a></li>
+                <li><a href="addreviews.html">Add Reviews</a></li>
+                
+            </ul>
+        </nav>
+        <a href="#" class="login-button">
+            <span>Log In</span>
+        </a>
+    </header>
+  
+  <h1>Add Reviews</h1>
   
   <div class="review-form">
     <h2>Write a Review</h2>
