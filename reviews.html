@@ -710,45 +710,33 @@
     </a>
 
     <script>
-                document.addEventListener('DOMContentLoaded', function() {
+               document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
     const reviewCards = document.querySelectorAll('.review-card');
     
+    // Simple search function
     function performSearch() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    
-    // Check all review cards
-    for (let card of reviewCards) {
-        // Get all text content
-        const reviewText = card.querySelector('.review-text').innerText.toLowerCase();
-        const reviewerName = card.querySelector('.reviewer-name').innerText.toLowerCase();
-        const appName = card.querySelector('.app-name').innerText.toLowerCase();
+        const searchTerm = searchInput.value.toLowerCase().trim();
         
-        // Show or hide based on search term
-        if (searchTerm === '' || 
-            reviewText.indexOf(searchTerm) > -1 || 
-            reviewerName.indexOf(searchTerm) > -1 || 
-            appName.indexOf(searchTerm) > -1) {
+        // Process each card
+        reviewCards.forEach(function(card) {
+            const text = card.textContent.toLowerCase();
             
-            card.classList.remove('hidden');
-            
-            // Only highlight if there's a search term
-            if (searchTerm !== '') {
-                const textElement = card.querySelector('.review-text');
-                let html = textElement.innerText;
-                
-                // Simple string replacement (no regex)
-                const index = html.toLowerCase().indexOf(searchTerm);
-                if (index >= 0) {
-                    const matchedText = html.substring(index, index + searchTerm.length);
-                    html = html.split(matchedText).join('<span class="highlighted">' + matchedText + '</span>');
-                }
-                
-                textElement.innerHTML = html;
+            // Simple contains check
+            if (searchTerm === '' || text.includes(searchTerm)) {
+                card.style.display = ''; // Show card
+            } else {
+                card.style.display = 'none'; // Hide card
             }
-        } else {
-            card.classList.add('hidden');
-        }
+        });
     }
-}
+    
+    // Add event listeners
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+});
