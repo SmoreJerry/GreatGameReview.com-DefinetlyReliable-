@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Reviews</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    
+    .review-form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .review-form h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    .reviews-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .review {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+      animation: none;
+    }
+    
+    .review.new-review {
+      animation: highlightNew 2s ease;
+    }
+    
+    @keyframes highlightNew {
+      0% { background-color: #f0f7ff; }
+      100% { background-color: transparent; }
+    }
+    
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .stars {
+      color: #ffc107;
+      font-size: 18px;
+    }
+    
+    .date {
+      color: #777;
+      font-size: 0.85em;
+      margin-top: 8px;
+    }
+    
+    .review-content {
+      color: #333;
+      line-height: 1.5;
+    }
+    
+    .status-indicator {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .status-indicator.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Real-Time Reviews</h1>
+  
+  <div class="review-form">
+    <h2>Write a Review</h2>
+    <form id="reviewForm">
+      <div class="form-group">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="rating">Rating:</label>
+        <select id="rating" required>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="comment">Your Review:</label>
+        <textarea id="comment" rows="4" required></textarea>
+      </div>
+      
+      <button type="submit">Submit Review</button>
+    </form>
+  </div>
+  
+  <div class="reviews-container">
+    <h2>All Reviews</h2>
+    <div id="reviewsList"></div>
+  </div>
+  
+  <div id="statusIndicator" class="status-indicator">New review added!</div>
+
+  <script>
+    // Review system functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize reviews from localStorage or create empty array
+      let allReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+      let lastReviewCount = allReviews.length;
+      
+      // Generate a unique ID for this browser instance
+      const browserInstanceId = Date.now() + Math.floor(Math.random() * 10000);
+      
+      // Display existing reviews
+      displayAllReviews();
+      
+      // Set up polling to check for new reviews
+      setInterval(() => {
+        checkForNewReviews();
+      }, 2000); // Check every 2 seconds
+      
+      // Handle form submission
+      const reviewForm = document.getElementById('reviewForm');
+      reviewForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const reviewData = {
+          id: Date.now(), // Use timestamp as ID
+          name: document.getElementById('name').value,
+          rating: parseInt(document.getElementById('rating').value),
+          comment: document.getElementById('comment').value,
+          date: new Date().toISOString(),
+          browserInstanceId: browserInstanceId
+        };
+        
+        // Add to reviews and save to localStorage
+        allReviews.unshift(reviewData);
+        localStorage.setItem('reviews', JSON.stringify(allReviews));
+        
+        // Clear form
+        reviewForm.reset();
+        
+        // Update display
+        displayAllReviews();
+        
+        // Show success message
+        showStatus('Review submitted successfully!');
+      });
+      
+      // Function to check for new reviews from other browser instances
+      function checkForNewReviews() {
+        const storedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+        
+        // Find reviews that aren't from this browser instance and are new
+        const newReviews = storedReviews.filter(review => 
+          review.browserInstanceId !== browserInstanceId && 
+          !allReviews.some(existingReview => existingReview.id === review.id)
+        );
+        
+        if (newReviews.length > 0) {
+          // Add new reviews to our list
+          allReviews = storedReviews;
+          
+          // Update display
+          displayAllReviews(newReviews.map(review => review.id));
+          
+          // Show notification
+          showStatus('New review' + (newReviews.length > 1 ? 's' : '') + ' added!');
+        }
+      }
+      
+      // Function to display all reviews
+      function displayAllReviews(newReviewIds = []) {
+        const reviewsList = document.getElementById('reviewsList');
+        reviewsList.innerHTML = '';
+        
+        allReviews.forEach(review => {
+          const reviewElement = document.createElement('div');
+          reviewElement.className = 'review';
+          
+          // Highlight new reviews
+          if (newReviewIds.includes(review.id)) {
+            reviewElement.classList.add('new-review');
+          }
+          
+          const date = new Date(review.date);
+          const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+          
+          // Create stars based on rating
+          let starsHTML = '';
+          for (let i = 0; i < review.rating; i++) {
+            starsHTML += '★';
+          }
+          for (let i = review.rating; i < 5; i++) {
+            starsHTML += '☆';
+          }
+          
+          reviewElement.innerHTML = `
+            <div class="review-header">
+              <strong>${review.name}</strong>
+              <span class="stars">${starsHTML}</span>
+            </div>
+            <div class="review-content">
+              <p>${review.comment}</p>
+            </div>
+            <div class="date">${formattedDate}</div>
+          `;
+          
+          reviewsList.appendChild(reviewElement);
+        });
+      }
+      
+      // Function to show status indicator
+      function showStatus(message) {
+        const statusIndicator = document.getElementById('statusIndicator');
+        statusIndicator.textContent = message;
+        statusIndicator.classList.add('visible');
+        
+        setTimeout(() => {
+          statusIndicator.classList.remove('visible');
+        }, 3000);
+      }
+      
+      // Add example reviews if none exist
+      if (allReviews.length === 0) {
+        const exampleReviews = [
+          {
+            id: Date.now() - 1000,
+            name: "John Smith",
+            rating: 5,
+            comment: "Absolutely love this product! Would definitely recommend to friends and family.",
+            date: new Date(Date.now() - 86400000).toISOString(),
+            browserInstanceId: "example"
+          },
+          {
+            id: Date.now() - 2000,
+            name: "Sarah Johnson",
+            rating: 4,
+            comment: "Great experience overall. The customer service was excellent.",
+            date: new Date(Date.now() - 172800000).toISOString(),
+            browserInstanceId: "example"
+          }
+        ];
+        
+        allReviews = exampleReviews;
+        localStorage.setItem('reviews', JSON.stringify(allReviews));
+        displayAllReviews();
+      }
+    });
+  </script>
+</body>
+</html>
